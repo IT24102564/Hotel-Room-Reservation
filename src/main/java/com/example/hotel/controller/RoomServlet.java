@@ -29,14 +29,14 @@ public class RoomServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
 
-        // Set response type to JSON
+       
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         Gson gson = new Gson();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // Get all rooms or filter by availability
+        
             String availableParam = request.getParameter("available");
             List<RoomDTO> rooms;
 
@@ -48,7 +48,7 @@ public class RoomServlet extends HttpServlet {
 
             response.getWriter().write(gson.toJson(rooms));
         } else {
-            // Get single room by ID
+          
             String roomId = pathInfo.substring(1);
             Optional<RoomDTO> room = roomService.getRoomById(roomId);
 
@@ -66,7 +66,7 @@ public class RoomServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
-            // Create new room
+           
             BufferedReader reader = request.getReader();
             Room room = gson.fromJson(reader, Room.class);
 
@@ -75,7 +75,7 @@ public class RoomServlet extends HttpServlet {
             response.setContentType("application/json");
             response.getWriter().write(gson.toJson(createdRoom));
         } else if (pathInfo.equals("/refresh")) {
-            // Refresh room tree
+
             roomService.refreshRoomTree();
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
