@@ -106,7 +106,7 @@
         const amenities = document.getElementById('amenities');
         const reserveLink = document.getElementById('reserveLink');
 
-        
+
         function formatPrice(price) {
             return '$' + parseFloat(price).toFixed(2);
         }
