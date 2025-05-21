@@ -225,7 +225,7 @@
         let bookedDates = [];
         let flatpickrInstance;
 
-        // Initialize date picker
+
         function initDatePicker() {
             flatpickrInstance = flatpickr("#reservationCalendar", {
                 inline: true,
@@ -233,7 +233,7 @@
                 minDate: "today",
                 disable: bookedDates,
                 onReady: function(selectedDates, dateStr, instance) {
-                    // Mark booked dates
+
                     instance.daysContainer.querySelectorAll('.flatpickr-day').forEach(day => {
                         const date = new Date(day.dateObj);
                         const dateStr = formatDate(date);
@@ -253,12 +253,12 @@
             });
         }
 
-        // Format date as YYYY-MM-DD
+
         function formatDate(date) {
             return date.toISOString().split('T')[0];
         }
 
-        // Calculate total price based on selected dates and room price
+
         function calculateTotalPrice() {
             const roomOption = roomSelect.options[roomSelect.selectedIndex];
             if (roomOption && roomOption.value && checkInInput.value && checkOutInput.value) {
@@ -273,7 +273,7 @@
             }
         }
 
-        // Fetch booked dates for selected room
+
         function fetchBookedDates(roomId) {
             if (!roomId) return;
 
@@ -286,14 +286,14 @@
                             const start = new Date(reservation.checkInDate);
                             const end = new Date(reservation.checkOutDate);
 
-                            // Add all dates between check-in and check-out to booked dates
+
                             for (let dt = new Date(start); dt < end; dt.setDate(dt.getDate() + 1)) {
                                 bookedDates.push(formatDate(dt));
                             }
                         }
                     });
 
-                    // Reinitialize date picker with new booked dates
+
                     if (flatpickrInstance) {
                         flatpickrInstance.destroy();
                     }
@@ -304,27 +304,27 @@
                 });
         }
 
-        // Room selection change handler
+
         roomSelect.addEventListener('change', function() {
             fetchBookedDates(this.value);
             calculateTotalPrice();
         });
 
-        // Date input change handlers
+
         checkInInput.addEventListener('change', calculateTotalPrice);
         checkOutInput.addEventListener('change', calculateTotalPrice);
 
-        // Form submission
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // Hide any previous messages
+
             successMessage.classList.add('hidden');
             errorMessage.classList.add('hidden');
 
-            // Validate form
+
             if (!form.checkValidity()) {
-                // Show validation errors
+
                 Array.from(form.elements).forEach(el => {
                     if (!el.checkValidity()) {
                         const errorElement = document.getElementById(`${el.id}-error`);
@@ -338,12 +338,12 @@
                 return;
             }
 
-            // Show loading indicator
+
             loadingIndicator.classList.remove('hidden');
             submitButton.disabled = true;
 
             try {
-                // Prepare form data
+
                 const reservationData = {
                     userId: document.getElementById('userId').value,
                     roomId: roomSelect.value,
@@ -355,7 +355,7 @@
                     specialRequests: document.getElementById('specialRequests').value
                 };
 
-                // Send data to server
+
                 const response = await fetch(`${pageContext.request.contextPath}/reservations`, {
                     method: 'POST',
                     headers: {
@@ -369,16 +369,16 @@
                     throw new Error(errorData?.message || `Server responded with status: `+response.status);
                 }
 
-                // Show success message
+
                 successMessage.classList.remove('hidden');
 
-                // Reset form
+
                 form.reset();
                 if (flatpickrInstance) {
                     flatpickrInstance.clear();
                 }
                 const userId = localStorage.getItem("userId")
-                // Redirect to reservations list after 2 seconds
+
                 setTimeout(() => {
                     window.location.href = `${pageContext.request.contextPath}/my-reservations?userId=`+userId;
                 }, 2000);
@@ -388,13 +388,13 @@
                 errorText.textContent = error.message || 'There was an error creating the reservation.';
                 errorMessage.classList.remove('hidden');
             } finally {
-                // Hide loading indicator
+
                 loadingIndicator.classList.add('hidden');
                 submitButton.disabled = false;
             }
         });
 
-        // Initialize date picker
+
         initDatePicker();
     });
 </script>
